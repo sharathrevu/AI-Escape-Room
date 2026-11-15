@@ -1,0 +1,54 @@
+{
+  "title": "The Locked Library",
+  "intro": "You wake on a cold wooden floor. Dust drifts through the lamplight of an old library. A desk, a bookshelf and a large painting stand nearby, and a heavy door with a four-digit keypad blocks the only way out. Find the clues and escape!",
+  "instructions": "Type what you want to do: examine things, take items, use an item on something, move objects, or enter a four-digit code on a lock. Ask for a hint if you are stuck.",
+  "objects": {
+    "desk": {"aliases": ["desk", "writing desk"],
+      "description": "A heavy oak writing desk with a green leather top. A single drawer is built into the front, fitted with a four-digit dial lock. Nothing else of note rests on it except a cold brass lamp."},
+    "bookshelf": {"aliases": ["bookshelf", "shelf", "shelves"],
+      "description": "A floor-to-ceiling oak bookshelf. Most spines are faded, but four red books have been shelved upside down, as if someone wanted them noticed."},
+    "red_books": {"aliases": ["red books", "red book", "four books", "books", "book"],
+      "on_examine_flag": "books_read",
+      "description": "You pull out the four red books. Inside the cover of each, in pencil, is a single digit. Left to right on the shelf they read 4, 1, 7, 3."},
+    "painting": {"aliases": ["painting", "picture", "portrait"],
+      "on_examine_flag": "year_seen", "movable": true, "move_flag": "painting_moved",
+      "move_text": "You lift the crooked painting aside. Behind it a small steel safe is set into the plaster.",
+      "description": "A large oil painting of a lighthouse in a storm. In the bottom corner the signature reads 'R. Holt, 1926'. The frame hangs slightly crooked.",
+      "variants": [{"when": "painting_moved", "text": "The painting hangs away from the wall, revealing a small steel safe. The signature in the corner still reads 'R. Holt, 1926'."}]},
+    "drawer": {"aliases": ["drawer", "desk drawer"], "code": "4173", "unlock_flag": "drawer_unlocked",
+      "locked_text": "The drawer is locked with a four-digit dial. It will not budge.",
+      "unlock_text": "The dial clicks into place and the drawer slides open. A small brass key lies inside.",
+      "description": "A narrow desk drawer secured by a four-digit dial lock. It will not budge.",
+      "variants": [{"when": "drawer_unlocked", "text": "The drawer is open. A small brass key lies inside."},
+                   {"when": "brass_key_taken", "text": "The drawer is open and empty."}]},
+    "safe": {"aliases": ["safe", "wall safe"], "hidden_until": "painting_moved", "unlock_flag": "safe_open",
+      "locked_text": "The safe has a keyhole and is locked. It needs a key.",
+      "description": "A small steel wall safe with a keyhole. It is locked.",
+      "variants": [{"when": "safe_open", "text": "The safe is open. A folded card lies inside."},
+                   {"when": "card_taken", "text": "The safe is open and empty."}]},
+    "door": {"aliases": ["door", "exit", "keypad", "keypad lock"], "code": "1926", "unlock_flag": "door_unlocked",
+      "locked_text": "The door is locked. It has a keypad that takes four digits and nothing else will open it.",
+      "unlock_text": "The keypad beeps, the bolt slides back and the door swings open onto the cool night air. You have escaped the library!",
+      "description": "A heavy oak door with a numeric keypad for four digits. It is firmly locked.",
+      "variants": [{"when": "door_unlocked", "text": "The door stands open to the night air."}]}
+  },
+  "items": {
+    "brass_key": {"name": "brass key", "aliases": ["brass key", "small key", "key"], "requires_flag": "drawer_unlocked",
+      "description": "A small brass key with a tiny lighthouse engraved on the bow."},
+    "card": {"name": "folded card", "aliases": ["folded card", "card", "note"], "requires_flag": "safe_open",
+      "description": "A cream card in neat handwriting: 'To leave this place, enter the year the lighthouse was painted.'"}
+  },
+  "use_rules": [
+    {"item": "brass_key", "target": "safe", "requires_flag": "painting_moved", "sets_flag": "safe_open",
+     "text": "The brass key turns with a click and the safe door swings open, revealing a folded card."}
+  ],
+  "hints": [
+    {"until": "books_read", "text": "Four of the books on the bookshelf look out of place. Examine them."},
+    {"until": "drawer_unlocked", "text": "The numbers from the books might fit the lock on the desk drawer."},
+    {"until": "painting_moved", "text": "The painting hangs crooked. Perhaps something is behind it."},
+    {"until": "safe_open", "text": "The key from the drawer must fit something on the wall."},
+    {"until": "card_taken", "text": "Take what is inside the safe and read it."},
+    {"until": "door_unlocked", "text": "The card refers to something you have already seen on the painting."}
+  ],
+  "puzzles": ["drawer_unlocked", "safe_open", "door_unlocked"]
+}
